@@ -1,3 +1,4 @@
+import FloatingClouds from "@/components/FloatingClouds";
 import Mascot from "@/components/Mascot";
 import MenuCard from "@/components/MenuCard";
 import Onboarding from "@/components/Onboarding";
@@ -35,21 +36,28 @@ const menus = [
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-sky-50 px-5 py-10">
+    <main className="relative min-h-screen overflow-hidden bg-linear-to-b from-sky-200 via-sky-50 to-amber-50 px-5 py-10">
+      <FloatingClouds />
       <Onboarding />
 
-      <Mascot size={120} />
-      <h1 className="mt-4 text-center text-2xl font-bold text-slate-700">
-        Hai! Mau ngapain hari ini?
-      </h1>
-      <p className="mt-1 text-center text-slate-500">
-        Pelan-pelan aja, nggak ada yang buru-buru.
-      </p>
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="relative">
+          <div className="absolute inset-0 -z-10 rounded-full bg-white/60 blur-2xl" />
+          <Mascot size={120} />
+        </div>
 
-      <div className="mt-8 grid w-full max-w-md grid-cols-2 gap-4">
-        {menus.map((m, i) => (
-          <MenuCard key={m.href} {...m} index={i} />
-        ))}
+        <h1 className="mt-4 text-center text-2xl font-extrabold text-slate-700">
+          Hai! Mau ngapain hari ini?
+        </h1>
+        <p className="mt-1 text-center text-slate-600">
+          Pelan-pelan aja, nggak ada yang buru-buru.
+        </p>
+
+        <div className="mt-8 grid w-full max-w-md grid-cols-2 gap-4">
+          {menus.map((m, i) => (
+            <MenuCard key={m.href} {...m} index={i} />
+          ))}
+        </div>
       </div>
     </main>
   );
