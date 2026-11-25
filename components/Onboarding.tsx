@@ -1,21 +1,26 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Aurora from "./Aurora";
+import FloatingClouds from "./FloatingClouds";
 import Mascot from "./Mascot";
 
 const STORAGE_KEY = "onboarding-done";
 
 const slides = [
   {
+    emoji: "👋",
     title: "Hai, aku Awan!",
     text: "Selamat datang! Di sini kamu bisa belajar mengenal dan merawat kesehatan mentalmu dengan cara yang santai.",
   },
   {
+    emoji: "🎈",
     title: "Apa yang bisa kamu lakukan?",
     text: "Baca materi singkat yang gampang dipahami, lalu main game relaksasi buat nenangin pikiran.",
   },
   {
+    emoji: "💛",
     title: "Satu hal penting",
     text: "Website ini untuk edukasi, bukan pengganti psikolog. Kalau butuh bantuan, buka menu Butuh Bantuan ya.",
   },
@@ -35,6 +40,7 @@ function getSnapshot() {
 const getServerSnapshot = () => true;
 
 export default function Onboarding() {
+  const reduceMotion = useReducedMotion();
   const done = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [dismissed, setDismissed] = useState(false);
   const [step, setStep] = useState(0);
@@ -49,58 +55,117 @@ export default function Onboarding() {
   };
 
   const isLast = step === slides.length - 1;
+  const slide = slides[step];
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-sky-50 px-6 text-center"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-linear-to-b from-sky-300 via-indigo-200 to-fuchsia-200 px-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, scale: 1.06 }}
+          transition={{ duration: 0.4 }}
         >
+          <Aurora blobA="bg-cyan-200/60" blobB="bg-fuchsia-300/50" />
+          <FloatingClouds />
+
           <button
             onClick={finish}
-            className="absolute right-5 top-5 text-sm text-slate-500"
+            className="absolute top-5 right-5 z-10 rounded-full bg-white/60 px-3 py-1.5 text-sm font-semibold text-slate-600 shadow-sm backdrop-blur transition hover:bg-white/80 active:scale-95"
           >
             Lewati
           </button>
 
-          <Mascot size={150} />
-
-          <AnimatePresence mode="wait">
+          <div className="relative z-10 flex w-full flex-col items-center">
+            {/* maskot dengan riak */}
             <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25 }}
-              className="mt-8 max-w-sm"
+              className="relative isolate"
+              initial={{ scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 140, damping: 12 }}
             >
-              <h2 className="text-2xl font-bold text-slate-700">
-                {slides[step].title}
-              </h2>
-              <p className="mt-3 text-slate-600">{slides[step].text}</p>
+              {!reduceMotion &&
+                [0, 1].map((i) => (
+                  <motion.span
+                    key={i}
+                    aria-hidden
+                    className="absolute inset-0 rounded-full border-2 border-white/80"
+                    animate={{ scale: [1, 1.7], opacity: [0.7, 0] }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: i * 1.5,
+                      ease: "easeOut",
+                    }}
+                  />
+                ))}
+              <div className="absolute inset-0 -z-10 rounded-full bg-white/60 blur-2xl" />
+              <Mascot size={170} />
             </motion.div>
-          </AnimatePresence>
 
-          <div className="mt-8 flex gap-2">
-            {slides.map((_, i) => (
-              <span
-                key={i}
-                className={`h-2 rounded-full transition-all ${
-                  i === step ? "w-6 bg-sky-400" : "w-2 bg-sky-200"
-                }`}
-              />
-            ))}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.3 }}
+                className="mt-8 flex max-w-sm flex-col items-center"
+              >
+                <motion.span
+                  aria-hidden
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl shadow-md backdrop-blur"
+                  initial={{ scale: 0, rotate: -25 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{
+                    delay: 0.1,
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 12,
+                  }}
+                >
+                  {slide.emoji}
+                </motion.span>
+                <motion.h2
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15, duration: 0.35 }}
+                  className="mt-4 text-2xl font-extrabold text-slate-700"
+                >
+                  {slide.title}
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.35 }}
+                  className="mt-3 text-slate-600"
+                >
+                  {slide.text}
+                </motion.p>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-8 flex gap-2" aria-hidden>
+              {slides.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === step ? "w-7 bg-indigo-500" : "w-2 bg-white/80"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <motion.button
+              onClick={() => (isLast ? finish() : setStep(step + 1))}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-8 w-full max-w-xs rounded-full bg-linear-to-r from-sky-400 via-indigo-400 to-fuchsia-400 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-300/60"
+            >
+              {isLast ? "Mulai ✨" : "Lanjut"}
+            </motion.button>
           </div>
-
-          <button
-            onClick={() => (isLast ? finish() : setStep(step + 1))}
-            className="mt-8 w-full max-w-xs rounded-full bg-sky-400 py-3 font-semibold text-white active:scale-95"
-          >
-            {isLast ? "Mulai" : "Lanjut"}
-          </button>
         </motion.div>
       )}
     </AnimatePresence>

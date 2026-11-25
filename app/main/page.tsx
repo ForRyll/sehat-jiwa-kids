@@ -1,5 +1,5 @@
-import Link from "next/link";
 import MenuCard from "@/components/MenuCard";
+import PageHeader from "@/components/PageHeader";
 import PageShell from "@/components/PageShell";
 
 export const metadata = {
@@ -8,15 +8,12 @@ export const metadata = {
 
 export default function MainPage() {
   return (
-    <PageShell tone="amber">
-      <Link href="/" className="text-sm text-slate-500">
-        ← Kembali
-      </Link>
-
-      <h1 className="mt-4 text-2xl font-extrabold text-slate-700">Main 🎮</h1>
-      <p className="mt-2 text-slate-600">
-        Santai sebentar, pilih yang kamu suka.
-      </p>
+    <PageShell tone="amber" backHref="/">
+      <PageHeader
+        emoji="🎮"
+        title="Main"
+        desc="Santai sebentar, pilih yang kamu suka."
+      />
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <MenuCard
@@ -44,6 +41,10 @@ export default function MainPage() {
           index={2}
         />
       </div>
+
+      <p className="mt-6 rounded-2xl bg-white/60 p-3 text-center text-xs text-slate-600 backdrop-blur">
+        💡 Santai aja, di sini nggak ada skor dan nggak ada batas waktu.
+      </p>
     </PageShell>
   );
 }

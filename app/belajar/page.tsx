@@ -1,5 +1,5 @@
-import Link from "next/link";
 import MenuCard from "@/components/MenuCard";
+import PageHeader from "@/components/PageHeader";
 import PageShell from "@/components/PageShell";
 import { materi } from "@/content/materi";
 
@@ -9,15 +9,12 @@ export const metadata = {
 
 export default function BelajarPage() {
   return (
-    <PageShell tone="sky">
-      <Link href="/" className="text-sm text-slate-500">
-        ← Kembali
-      </Link>
-
-      <h1 className="mt-4 text-2xl font-extrabold text-slate-700">Belajar 📖</h1>
-      <p className="mt-2 text-slate-600">
-        Materi singkat, pilih topik yang lagi kamu butuhkan.
-      </p>
+    <PageShell tone="sky" backHref="/">
+      <PageHeader
+        emoji="📖"
+        title="Belajar"
+        desc="Materi singkat, pilih topik yang lagi kamu butuhkan."
+      />
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         {materi.map((m, i) => (
