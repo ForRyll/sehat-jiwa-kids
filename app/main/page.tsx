@@ -17,12 +17,20 @@ export default function MainPage() {
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <MenuCard
+          href="/main/skrining"
+          title="Skrining Mandiri"
+          desc="Cek tingkat stres & kecemasan harianmu"
+          emoji="📋"
+          color="bg-emerald-100"
+          index={0}
+        />
+        <MenuCard
           href="/main/napas"
           title="Latihan Napas"
           desc="Tenangin diri bareng Awan"
           emoji="🌬️"
           color="bg-sky-100"
-          index={0}
+          index={1}
         />
         <MenuCard
           href="/main/emosi"
@@ -30,7 +38,7 @@ export default function MainPage() {
           desc="Kenali perasaanmu lewat situasi sehari-hari"
           emoji="🎭"
           color="bg-rose-100"
-          index={1}
+          index={2}
         />
         <MenuCard
           href="/main/afirmasi"
@@ -38,7 +46,7 @@ export default function MainPage() {
           desc="Ambil kalimat penyemangat buat hari ini"
           emoji="💌"
           color="bg-violet-100"
-          index={2}
+          index={3}
         />
       </div>
 
