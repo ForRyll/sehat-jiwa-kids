@@ -2,8 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import GameShell from "@/components/GameShell";
+import { useMotionSafe } from "@/lib/storage";
 
 const cards = [
   "Nggak apa-apa kalau hari ini cuma bisa sedikit. Sedikit tetap berarti.",
@@ -38,7 +39,7 @@ function pickNext(prev: number) {
 }
 
 export default function AfirmasiPage() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMotionSafe();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(0);

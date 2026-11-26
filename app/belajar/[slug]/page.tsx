@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import FloatEmoji from "@/components/FloatEmoji";
 import GlassCard from "@/components/GlassCard";
+import MateriActions from "@/components/MateriActions";
 import PageShell from "@/components/PageShell";
 import ReadingProgress from "@/components/ReadingProgress";
 import Reveal from "@/components/Reveal";
+import TopicIllustration from "@/components/TopicIllustration";
 import { materi, DIAKSES } from "@/content/materi";
 
 type Props = {
@@ -49,13 +50,29 @@ export default async function MateriPage({ params }: Props) {
           />
 
           <div className="relative">
-            <FloatEmoji emoji={item.emoji} />
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/75 shadow-lg backdrop-blur">
+              <TopicIllustration slug={item.slug} size={56} />
+            </div>
 
             <h1 className="mt-4 text-2xl font-extrabold text-slate-700">
-              {item.title}
+              {item.title} <span aria-hidden>{item.emoji}</span>
             </h1>
 
             <p className="mt-1 text-slate-600">{item.summary}</p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-bold text-slate-600">
+              <span className="rounded-full bg-white/75 px-2.5 py-1">
+                {item.kategori}
+              </span>
+              <span className="rounded-full bg-white/75 px-2.5 py-1">
+                ⏱️ {item.waktuBaca} menit baca
+              </span>
+              {item.direview === "belum" && (
+                <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-800">
+                  Menunggu review dosen
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </Reveal>
@@ -111,9 +128,49 @@ export default async function MateriPage({ params }: Props) {
         ))
       )}
 
+      <Reveal className="mt-4">
+        <GlassCard className="border border-emerald-200/70 bg-emerald-50/70">
+          <div className="flex items-center gap-2">
+            <span aria-hidden className="text-xl">
+              🌱
+            </span>
+            <h2 className="font-bold text-slate-700">
+              Coba ini: {item.latihan.judul}
+            </h2>
+          </div>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-slate-600">
+            {item.latihan.langkah.map((step, idx) => (
+              <li key={idx}>{step}</li>
+            ))}
+          </ol>
+        </GlassCard>
+      </Reveal>
+
+      <Reveal className="mt-4">
+        <GlassCard className="border border-rose-200/70 bg-rose-50/70">
+          <div className="flex items-center gap-2">
+            <span aria-hidden className="text-xl">
+              🤝
+            </span>
+            <h2 className="font-bold text-slate-700">Kapan perlu bantuan?</h2>
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            {item.kapanPerluBantuan}
+          </p>
+          <Link
+            href="/bantuan"
+            className="mt-3 inline-flex min-h-11 items-center rounded-2xl bg-rose-500 px-4 text-xs font-bold text-white shadow-xs transition hover:bg-rose-600 active:scale-95"
+          >
+            Lihat Halaman Bantuan →
+          </Link>
+        </GlassCard>
+      </Reveal>
+
+      <MateriActions slug={item.slug} />
+
       {item.sumber.length > 0 && (
         <Reveal className="mt-4">
-          <section className="rounded-3xl bg-white/60 p-5 ring-1 ring-white/70 backdrop-blur">
+          <section className="glass-surface rounded-3xl bg-white/60 p-5 ring-1 ring-white/70 backdrop-blur">
             <h2 className="text-sm font-bold text-slate-700">
               Sumber dan bacaan lanjutan
             </h2>
@@ -127,7 +184,13 @@ export default async function MateriPage({ params }: Props) {
                     rel="noopener noreferrer"
                     className="block rounded-xl bg-white/70 px-3 py-2 font-medium wrap-break-word text-sky-600 transition hover:bg-white active:scale-[0.98]"
                   >
-                    {s.label} ↗
+                    <span>{s.label} ↗</span>
+                    <span className="mt-0.5 block text-[11px] font-normal text-slate-500">
+                      {s.jenis}
+                      {s.tahun ? ` • ${s.tahun}` : ""} •{" "}
+                      {s.bahasa === "id" ? "Indonesia" : "Inggris"} • Dicek{" "}
+                      {s.diverifikasi}
+                    </span>
                   </a>
                 </li>
               ))}

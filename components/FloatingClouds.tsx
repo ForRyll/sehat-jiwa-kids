@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionSafe } from "@/lib/storage";
 
 const clouds = [
   { top: "5%", left: "8%", size: 90, duration: 9, opacity: 0.7 },
@@ -21,7 +22,7 @@ function CloudShape({ size }: { size: number }) {
 }
 
 export default function FloatingClouds() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMotionSafe();
 
   return (
     <div

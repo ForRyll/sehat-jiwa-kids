@@ -4,8 +4,24 @@ export type Section = {
 };
 
 export type Sumber = {
-  label: string;
-  url: string;
+  label: string; // judul + lembaga/penulis
+  url: string; // tautan yang sudah diverifikasi
+  jenis: "jurnal" | "lembaga" | "artikel" | "buku";
+  tahun?: number;
+  doi?: string; // jika ada, harus nyata
+  bahasa: "id" | "en";
+  diverifikasi: string; // tanggal terakhir link dicek (ISO)
+};
+
+export type KategoriMateri =
+  | "Stres & Kuliah"
+  | "Emosi & Pikiran"
+  | "Kebiasaan Sehat"
+  | "Relasi";
+
+export type LatihanSingkat = {
+  judul: string;
+  langkah: string[];
 };
 
 export type Materi = {
@@ -13,13 +29,19 @@ export type Materi = {
   title: string;
   emoji: string;
   color: string;
+  kategori: KategoriMateri;
+  waktuBaca: number; // menit
   summary: string;
   sections: Section[];
+  latihan: LatihanSingkat;
+  kapanPerluBantuan: string;
+  tingkatSensitif: "biasa" | "sensitif";
+  direview: "belum" | "sudah";
   sumber: Sumber[];
 };
 
 // Update tanggal ini setiap kali link sumber dicek ulang
-export const DIAKSES = "25 November 2026";
+export const DIAKSES = "26 November 2026";
 
 export const materi: Materi[] = [
   {
@@ -27,7 +49,11 @@ export const materi: Materi[] = [
     title: "Stres Akademik",
     emoji: "📚",
     color: "bg-sky-100",
+    kategori: "Stres & Kuliah",
+    waktuBaca: 4,
     summary: "Kenali stres kuliah dan cara menghadapinya",
+    tingkatSensitif: "biasa",
+    direview: "sudah",
     sections: [
       {
         heading: "Stres itu sebenarnya apa?",
@@ -59,21 +85,40 @@ export const materi: Materi[] = [
           "WHO juga punya panduan latihan mengelola stres berjudul Doing What Matters in Times of Stress. Menurut WHO, beberapa menit per hari saja sudah cukup untuk berlatih. Panduannya bisa kamu temukan lewat tautan sumber di bawah.",
         ],
       },
-      {
-        heading: "Kapan perlu minta bantuan?",
-        body: [
-          "Kalau stres terasa sulit dikendalikan, mengganggu tidur, makan, atau aktivitas sehari-hari, atau berlangsung lama, itu tanda bahwa kamu butuh dukungan. Bicaralah dengan orang yang kamu percaya atau tenaga kesehatan. Meminta bantuan bukan tanda lemah.",
-        ],
-      },
     ],
+    latihan: {
+      judul: "Jeda 3 Menit di Tengah Tugas",
+      langkah: [
+        "Berhenti menatap layar atau buku selama 3 menit.",
+        "Tarik napas pelan 4 hitungan, buang pelan 6 hitungan sebanyak 5 kali.",
+        "Tuliskan 1 tugas paling kecil yang bisa kamu selesaikan dalam 15 menit ke depan.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Kalau stres terasa sulit dikendalikan, mengganggu tidur, makan, atau aktivitas sehari-hari, atau berlangsung lama, itu tanda bahwa kamu butuh dukungan. Bicaralah dengan orang yang kamu percaya, konselor kampus, atau tenaga kesehatan.",
     sumber: [
       {
-        label: "WHO – Stress (tanya jawab, Bahasa Inggris)",
+        label: "WHO – Stress (tanya jawab)",
         url: "https://www.who.int/news-room/questions-and-answers/item/stress",
+        jenis: "lembaga",
+        tahun: 2023,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "WHO EMRO – Stress (lembar fakta, Bahasa Inggris)",
+        label: "WHO EMRO – Stress (lembar fakta)",
         url: "https://applications.emro.who.int/docs/WHOEMMNH236E-eng.pdf",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "WHO – Doing What Matters in Times of Stress: An Illustrated Guide",
+        url: "https://www.who.int/publications/i/item/9789240003927",
+        jenis: "buku",
+        tahun: 2020,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
     ],
   },
@@ -82,7 +127,11 @@ export const materi: Materi[] = [
     title: "Rasa Cemas",
     emoji: "🌧️",
     color: "bg-amber-100",
+    kategori: "Emosi & Pikiran",
+    waktuBaca: 4,
     summary: "Memahami cemas dan cara menenangkannya",
+    tingkatSensitif: "biasa",
+    direview: "sudah",
     sections: [
       {
         heading: "Cemas itu wajar",
@@ -120,18 +169,38 @@ export const materi: Materi[] = [
         ],
       },
     ],
+    latihan: {
+      judul: "Menapak di Saat Ini",
+      langkah: [
+        "Tempelkan kedua telapak kaki ke lantai dan rasakan pijakannya.",
+        "Sebutkan 3 benda yang bisa kamu lihat di sekitarmu sekarang.",
+        "Tarik napas pelan lewat hidung, lalu hembuskan lebih panjang lewat mulut.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Jika rasa cemas berlangsung berminggu-minggu, disertai serangan panik berulang, atau membuatmu menghindari kuliah dan aktivitas penting, pertimbangkan untuk berkonsultasi dengan psikolog, konselor kampus, atau dokter.",
     sumber: [
       {
-        label: "WHO – Anxiety disorders (fact sheet, Bahasa Inggris)",
+        label: "WHO – Anxiety disorders (fact sheet)",
         url: "https://www.who.int/news-room/fact-sheets/detail/anxiety-disorders",
+        jenis: "lembaga",
+        tahun: 2023,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "WHO EMRO – Generalized anxiety disorder (Bahasa Inggris)",
+        label: "WHO EMRO – Generalized anxiety disorder",
         url: "https://applications.emro.who.int/docs/WHOEMMNH231E-eng.pdf",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "Better Health Channel (Victoria, Australia) – Anxiety disorders (Bahasa Inggris)",
+        label: "Better Health Channel (Victoria, Australia) – Anxiety disorders",
         url: "https://www.betterhealth.vic.gov.au/health/ConditionsAndTreatments/anxiety-disorders",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
     ],
   },
@@ -140,7 +209,11 @@ export const materi: Materi[] = [
     title: "Tidur dan Pikiran",
     emoji: "🌙",
     color: "bg-violet-100",
+    kategori: "Kebiasaan Sehat",
+    waktuBaca: 4,
     summary: "Kenapa tidur penting buat kesehatan mental",
+    tingkatSensitif: "biasa",
+    direview: "sudah",
     sections: [
       {
         heading: "Tidur bukan cuma soal istirahat",
@@ -169,30 +242,46 @@ export const materi: Materi[] = [
           "Beberapa kebiasaan umum lain yang sering disarankan: kurangi layar HP menjelang tidur, hindari kafein di sore dan malam hari, dan jangan terus berbaring gelisah di tempat tidur. Kalau belum mengantuk, bangun sebentar dan lakukan hal tenang dulu.",
         ],
       },
-      {
-        heading: "Kapan perlu ke profesional?",
-        body: [
-          "Kalau susah tidur berlangsung terus-menerus dan mengganggu aktivitasmu, atau kamu juga merasa sangat cemas atau sedih, sebaiknya bicara dengan tenaga kesehatan. Ada terapi khusus yang disebut CBT untuk insomnia (CBT-I), yang terbukti membantu mengurangi masalah tidur.",
-          "Menangani masalah tidur bersamaan dengan perawatan kesehatan mental juga disebut bisa memberi hasil yang lebih baik.",
-        ],
-      },
     ],
+    latihan: {
+      judul: "Ritual 15 Menit Sebelum Tidur",
+      langkah: [
+        "Letakkan HP agak jauh atau aktifkan mode jangan ganggu 15 menit sebelum tidur.",
+        "Redupkan lampu kamar dan duduk santai sebentar.",
+        "Jika pikiran penuh soal tugas besok, tulis singkat di kertas supaya otak tidak terus mengingat-ingat.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Kalau susah tidur berlangsung terus-menerus dan mengganggu aktivitasmu, atau kamu juga merasa sangat cemas atau sedih, sebaiknya bicara dengan tenaga kesehatan. Ada terapi khusus seperti CBT untuk insomnia (CBT-I) yang terbukti membantu.",
     sumber: [
       {
-        label: "Mental Health Foundation (UK) – How to sleep better (Bahasa Inggris)",
+        label: "Mental Health Foundation (UK) – How to sleep better",
         url: "https://www.mentalhealth.org.uk/publications/how-sleep-better",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "Sleep Foundation – Sleep and mental health (Bahasa Inggris)",
+        label: "Sleep Foundation – Sleep and mental health",
         url: "https://www.sleepfoundation.org/sleep-hygiene/mental-health",
+        jenis: "artikel",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "Stanford Medicine – Sleep and mental health connection (Bahasa Inggris)",
+        label: "Stanford Medicine – Sleep and mental health connection",
         url: "https://med.stanford.edu/news/insights/2025/08/sleep-mental-health-connection-what-science-says.html",
+        jenis: "artikel",
+        tahun: 2025,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "Michigan Medicine – The link between sleep and mental health (Bahasa Inggris)",
-        url: "https://medschool.umich.edu/health-lab/link-between-sleep-and-mental-health",
+        label: "NIMH – Caring for Your Mental Health",
+        url: "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
     ],
   },
@@ -201,7 +290,11 @@ export const materi: Materi[] = [
     title: "Burnout",
     emoji: "🔋",
     color: "bg-rose-100",
+    kategori: "Stres & Kuliah",
+    waktuBaca: 4,
     summary: "Saat energi terasa habis terus",
+    tingkatSensitif: "biasa",
+    direview: "sudah",
     sections: [
       {
         heading: "Burnout itu apa?",
@@ -232,29 +325,47 @@ export const materi: Materi[] = [
           "Istirahat bukan tanda lemah. Burnout bisa menimpa siapa pun, di semua bidang dan level, dan memberi waktu untuk pulih adalah bagian dari proses penyembuhan.",
         ],
       },
-      {
-        heading: "Kapan perlu bantuan?",
-        body: [
-          "Kalau kelelahan sudah mengganggu kuliah, hubungan, atau kesehatanmu, atau kamu mulai merasa putus asa, bicaralah dengan konselor atau tenaga kesehatan. Kamu nggak perlu menunggu sampai benar-benar ambruk.",
-        ],
-      },
     ],
+    latihan: {
+      judul: "Audit Energi Harian",
+      langkah: [
+        "Tuliskan 1 hal yang paling menguras energimu minggu ini.",
+        "Tuliskan 1 hal kecil yang biasanya bikin kamu merasa sedikit lebih pulih.",
+        "Sisihkan minimal 20 menit hari ini untuk melakukan hal pemulih itu tanpa rasa bersalah.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Kalau kelelahan sudah mengganggu kuliah, hubungan, atau kesehatanmu, atau kamu mulai merasa putus asa, bicaralah dengan konselor atau tenaga kesehatan. Kamu nggak perlu menunggu sampai benar-benar ambruk.",
     sumber: [
       {
-        label: "WHO – Burn-out an \"occupational phenomenon\" (Bahasa Inggris)",
+        label: "WHO – Burn-out an \"occupational phenomenon\"",
         url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases",
+        jenis: "lembaga",
+        tahun: 2019,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "WHO – Burn-out FAQ klasifikasi ICD-11 (Bahasa Inggris)",
+        label: "WHO – Burn-out FAQ klasifikasi ICD-11",
         url: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "NPR – WHO redefines burnout as a syndrome linked to chronic stress at work (Bahasa Inggris)",
+        label: "NPR – WHO redefines burnout as a syndrome linked to chronic stress at work",
         url: "https://npr.org/sections/health-shots/2019/05/28/727637944/who-redefines-burnout-as-a-syndrome-linked-to-chronic-stress-at-work",
+        jenis: "artikel",
+        tahun: 2019,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "EPFL – Burn-out (Bahasa Inggris)",
+        label: "EPFL – Burn-out",
         url: "https://www.epfl.ch/campus/security-safety/en/sante/sante-mentale-bien-etre/mental-health/burn-out/",
+        jenis: "artikel",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
     ],
   },
@@ -263,7 +374,11 @@ export const materi: Materi[] = [
     title: "Merasa Kesepian",
     emoji: "🫂",
     color: "bg-emerald-100",
+    kategori: "Relasi",
+    waktuBaca: 4,
     summary: "Kesepian itu umum, dan ada cara menghadapinya",
+    tingkatSensitif: "biasa",
+    direview: "sudah",
     sections: [
       {
         heading: "Kesepian itu umum",
@@ -294,25 +409,246 @@ export const materi: Materi[] = [
           "Kalau mengajak orang terasa menakutkan, itu wajar. Kamu boleh mulai dengan pesan singkat, dan nggak harus langsung bertemu.",
         ],
       },
+    ],
+    latihan: {
+      judul: "Satu Pesan Hangat Hari Ini",
+      langkah: [
+        "Pikirkan satu orang (teman lama, keluarga, atau teman kos) yang membuatmu nyaman.",
+        "Kirim pesan singkat yang sederhana, misalnya menanyakan kabar atau berbagi hal ringan.",
+        "Apresiasi dirimu karena sudah mengambil satu langkah kecil untuk terhubung.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Kalau rasa kesepian bikin kamu terus-menerus sedih, menarik diri, atau kehilangan semangat, cobalah bicara dengan konselor atau tenaga kesehatan. Kamu berhak mendapat dukungan, dan kamu nggak harus melewatinya sendirian.",
+    sumber: [
       {
-        heading: "Kalau kesepiannya terasa berat",
+        label: "WHO – Commission on Social Connection",
+        url: "https://www.who.int/groups/commission-on-social-connection",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "WHO – Social connection linked to improved health",
+        url: "https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death",
+        jenis: "lembaga",
+        tahun: 2025,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "WHO – From loneliness to social connection (ringkasan laporan)",
+        url: "https://www.who.int/publications/m/item/from-loneliness-to-social-connection-summary",
+        jenis: "lembaga",
+        tahun: 2025,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+    ],
+  },
+  {
+    slug: "mengenal-emosi",
+    title: "Mengenal dan Menamai Emosi",
+    emoji: "🎭",
+    color: "bg-sky-100",
+    kategori: "Emosi & Pikiran",
+    waktuBaca: 3,
+    summary: "Memahami apa yang sebenarnya kamu rasakan tanpa menghakimi",
+    tingkatSensitif: "biasa",
+    direview: "belum",
+    sections: [
+      {
+        heading: "Kenapa menamai emosi itu penting?",
         body: [
-          "Kalau rasa kesepian bikin kamu terus-menerus sedih, menarik diri, atau kehilangan semangat, cobalah bicara dengan konselor atau tenaga kesehatan. Kamu berhak mendapat dukungan, dan kamu nggak harus melewatinya sendirian.",
+          "Sering kali kita cuma bilang \"aku lagi bad mood\" atau \"rasanya nggak enak aja\". Padahal di balik satu label umum itu, ada emosi yang lebih spesifik—misalnya kecewa, kewalahan, malu, atau khawatir.",
+          "Dalam psikologi, kemampuan membedakan emosi secara spesifik membantu kita lebih mudah memahami kebutuhan diri dan memilih respons yang lebih tepat.",
+        ],
+      },
+      {
+        heading: "Tidak ada emosi yang 'salah'",
+        body: [
+          "Emosi seperti sedih, marah, atau cemas sering dicap negatif, padahal semuanya adalah sinyal alami. Sedih menandakan ada sesuatu yang berharga bagimu, marah bisa muncul saat batasanmu terasa dilanggar, dan cemas mengingatkan bahwa ada hal penting di depan.",
+          "Menamai emosi dengan kalimat sederhana seperti \"saat ini aku sedang merasa kecewa\" membantu menciptakan jarak yang sehat antara dirimu dan perasaan yang sedang lewat.",
+        ],
+      },
+      {
+        heading: "Melatih kepekaan emosi",
+        body: [
+          "Kamu bisa mulai dengan memperhatikan sinyal tubuh: dada terasa sesak, bahu tegang, atau perut terasa nggak nyaman. Dari situ, coba cari kata yang paling mendekati perasaanmu saat ini.",
+          "Kalau masih bingung, kamu juga bisa berlatih lewat game Tebak Emosi di menu Main untuk mengenali berbagai nuansa perasaan sehari-hari.",
         ],
       },
     ],
+    latihan: {
+      judul: "Cek Emosi 30 Detik",
+      langkah: [
+        "Berhenti sejenak dan perhatikan sensasi di tubuhmu (bahu, napas, perut).",
+        "Lengkapi kalimat ini di dalam hati: \"Saat ini aku merasa ... karena ...\".",
+        "Terima perasaan itu tanpa menghakimi, lalu pilih satu langkah kecil yang kamu butuhkan sekarang.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Jika emosi terasa terlalu kuat hingga sulit dikendalikan, membuatmu sering meledak atau justru mati rasa dalam waktu lama, cobalah berdiskusi dengan konselor kampus atau psikolog.",
     sumber: [
       {
-        label: "WHO – Commission on Social Connection (Bahasa Inggris)",
-        url: "https://www.who.int/groups/commission-on-social-connection",
+        label: "APA – Emotions (topik psikologi)",
+        url: "https://www.apa.org/topics/emotions",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "WHO – Social connection linked to improved health (siaran pers, Bahasa Inggris)",
-        url: "https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death",
+        label: "WHO – Mental health: strengthening our response",
+        url: "https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response",
+        jenis: "lembaga",
+        tahun: 2022,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
       {
-        label: "WHO – Ringkasan laporan dalam bahasa sederhana (Bahasa Inggris)",
-        url: "https://www.who.int/publications/m/item/from-loneliness-to-social-connection-summary",
+        label: "NIMH – Caring for Your Mental Health",
+        url: "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+    ],
+  },
+  {
+    slug: "prokrastinasi",
+    title: "Prokrastinasi dan Waktu Belajar",
+    emoji: "⏳",
+    color: "bg-amber-100",
+    kategori: "Stres & Kuliah",
+    waktuBaca: 4,
+    summary: "Kenapa kita sering menunda tugas dan cara memutus siklusnya",
+    tingkatSensitif: "biasa",
+    direview: "belum",
+    sections: [
+      {
+        heading: "Bukan sekadar malas",
+        body: [
+          "Banyak mahasiswa mengira menunda tugas berarti malas atau kurang disiplin. Padahal dalam penelitian psikologi yang dirangkum APA, prokrastinasi sering kali berkaitan dengan cara kita mengelola emosi yang nggak nyaman—seperti takut gagal, bosan, atau bingung harus mulai dari mana.",
+          "Menunda memberi rasa lega sesaat karena kita menghindari tugas yang terasa berat. Namun ketika tenggat makin dekat, stresnya justru menumpuk berkali-kali lipat.",
+        ],
+      },
+      {
+        heading: "Kenapa tugas kuliah sering ditunda?",
+        body: [
+          "Tugas besar seperti makalah atau skripsi sering terasa terlalu kabur dan berat jika dilihat sekaligus. Otak kita cenderung menghindar saat sesuatu terasa mengancam atau membingungkan.",
+          "Rasa takut hasilnya nggak sempurna juga sering bikin seseorang menunda untuk memulai.",
+        ],
+      },
+      {
+        heading: "Cara mulai tanpa terasa berat",
+        body: [
+          "Pecah tugas besar menjadi langkah yang sangat kecil—misalnya cukup buka dokumen dan tulis judul atau 3 poin kerangka saja.",
+          "Fokus pada durasi singkat (misalnya 15–20 menit), bukan langsung menargetkan selesai sempurna. Selain itu, bersikap ramah pada diri sendiri saat pernah menunda justru membantu memutus siklus stres dan rasa bersalah.",
+        ],
+      },
+    ],
+    latihan: {
+      judul: "Aturan 10 Menit Pertama",
+      langkah: [
+        "Pilih satu tugas kuliah yang paling sering kamu tunda.",
+        "Pasang pengatur waktu 10 menit dan berjanji hanya mengerjakan bagian paling kecilnya saja.",
+        "Setelah 10 menit, kamu bebas berhenti atau lanjut jika sudah mulai mengalir.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Jika kebiasaan menunda disertai rasa cemas berat, sulit fokus berkepanjangan, atau membuatmu tertinggal jauh dalam kuliah, kamu bisa berkonsultasi dengan dosen wali, layanan konseling kampus, atau psikolog.",
+    sumber: [
+      {
+        label: "APA Monitor – Procrastination and emotion regulation",
+        url: "https://www.apa.org/monitor/2018/05/procrastination",
+        jenis: "artikel",
+        tahun: 2018,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "APA – Procrastination research overview",
+        url: "https://www.apa.org/news/press/releases/2010/04/procrastination",
+        jenis: "lembaga",
+        tahun: 2010,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "Kemenkes RI – Portal Ayo Sehat (pengelolaan stres & gaya hidup)",
+        url: "https://ayosehat.kemkes.go.id",
+        jenis: "lembaga",
+        bahasa: "id",
+        diverifikasi: "2026-11-26",
+      },
+    ],
+  },
+  {
+    slug: "perfeksionisme-imposter",
+    title: "Perfeksionisme & Imposter Syndrome",
+    emoji: "🪞",
+    color: "bg-violet-100",
+    kategori: "Emosi & Pikiran",
+    waktuBaca: 4,
+    summary: "Saat standar terlalu tinggi bikin kamu merasa tidak pernah cukup",
+    tingkatSensitif: "biasa",
+    direview: "belum",
+    sections: [
+      {
+        heading: "Standar tinggi vs perfeksionisme",
+        body: [
+          "Punya target dan berusaha sebaik mungkin itu hal yang positif. Namun perfeksionisme muncul ketika standar yang dipasang terasa tidak realistis dan kesalahan kecil langsung dianggap sebagai kegagalan total.",
+          "Dalam kajian literatur akademik, perfeksionisme yang kaku sering berkaitan erat dengan stres berkepanjangan dan kelelahan belajar.",
+        ],
+      },
+      {
+        heading: "Apa itu imposter syndrome?",
+        body: [
+          "Imposter phenomenon (sering disebut imposter syndrome) adalah perasaan bahwa pencapaianmu selama ini hanya kebetulan atau keberuntungan, dan suatu saat orang lain akan tahu kamu \"tidak sepintar yang mereka kira\".",
+          "Perasaan ini sangat umum dialami mahasiswa, terutama saat masuk lingkungan baru yang kompetitif atau saat mengerjakan tugas besar. Merasa seperti itu bukan berarti kamu benar-benar tidak mampu.",
+        ],
+      },
+      {
+        heading: "Belajar cukup baik itu sudah cukup",
+        body: [
+          "Coba bedakan antara fakta dan kritik diri. Catat usaha nyata yang sudah kamu lakukan untuk mencapai titik sekarang, bukan sekadar menganggapnya kebetulan.",
+          "Ingat bahwa proses belajar memang melibatkan kesalahan dan revisi. Mengizinkan diri untuk bertumbuh pelan-pelan jauh lebih sehat daripada mengejar kesempurnaan.",
+        ],
+      },
+    ],
+    latihan: {
+      judul: "Catatan Bukti Nyata",
+      langkah: [
+        "Tuliskan 1 pencapaian atau tugas yang berhasil kamu selesaikan baru-baru ini.",
+        "Tuliskan 2 usaha konkret yang kamu lakukan untuk mencapainya (misalnya begadang menyusun draf, bertanya ke teman).",
+        "Ingatkan diri: hasil itu datang dari usahamu, bukan semata keberuntungan.",
+      ],
+    },
+    kapanPerluBantuan:
+      "Jika rasa takut salah dan keraguan diri membuatmu terus-menerus cemas, kelelahan, atau takut mencoba hal baru di kampus, berbicara dengan konselor atau psikolog bisa sangat membantu.",
+    sumber: [
+      {
+        label: "Thomas & Bigatti (2020) – Perfectionism, impostor phenomenon, and mental health in medicine (PMC)",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7882132/",
+        jenis: "jurnal",
+        tahun: 2020,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "APA – Perfectionism",
+        url: "https://www.apa.org/topics/perfectionism",
+        jenis: "lembaga",
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
+      },
+      {
+        label: "APA gradPSYCH – Feel like a fraud?",
+        url: "https://www.apa.org/gradpsych/2013/11/fraud",
+        jenis: "artikel",
+        tahun: 2013,
+        bahasa: "en",
+        diverifikasi: "2026-11-26",
       },
     ],
   },

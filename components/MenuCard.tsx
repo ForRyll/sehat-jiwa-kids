@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionSafe } from "@/lib/storage";
 
 type MenuCardProps = {
   href: string;
   title: string;
   desc: string;
   emoji: string;
+  illustration?: React.ReactNode;
   color: string; // class Tailwind lengkap, contoh: "bg-sky-100"
   index: number;
 };
@@ -17,10 +19,11 @@ export default function MenuCard({
   title,
   desc,
   emoji,
+  illustration,
   color,
   index,
 }: MenuCardProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMotionSafe();
 
   return (
     <motion.div
@@ -56,7 +59,7 @@ export default function MenuCard({
             delay: index * 0.2,
           }}
         >
-          {emoji}
+          {illustration ?? emoji}
         </motion.span>
 
         <span className="relative mt-3 text-lg font-bold text-slate-700">

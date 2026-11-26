@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import GentleSparkles from "./GentleSparkles";
 
 type Mood = {
   emoji: string;
@@ -50,9 +51,11 @@ const moods: Mood[] = [
 
 export default function MoodStrip() {
   const [picked, setPicked] = useState<number | null>(null);
+  const [burstKey, setBurstKey] = useState(0);
 
   return (
-    <section className="rounded-3xl bg-white/60 p-4 shadow-md backdrop-blur">
+    <section className="glass-surface relative rounded-3xl bg-white/60 p-4 shadow-md backdrop-blur">
+      <GentleSparkles burstKey={burstKey} />
       <h2 className="text-center text-sm font-bold text-slate-700">
         Hari ini lagi ngerasa apa?
       </h2>
@@ -61,7 +64,11 @@ export default function MoodStrip() {
         {moods.map((m, i) => (
           <motion.button
             key={m.label}
-            onClick={() => setPicked(picked === i ? null : i)}
+            onClick={() => {
+              const next = picked === i ? null : i;
+              setPicked(next);
+              if (next !== null) setBurstKey((k) => k + 1);
+            }}
             aria-pressed={picked === i}
             aria-label={m.label}
             whileHover={{ y: -3 }}

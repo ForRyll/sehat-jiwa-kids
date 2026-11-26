@@ -11,7 +11,7 @@ export default function GlassCard({
 }: GlassCardProps) {
   return (
     <section
-      className={`rounded-3xl bg-white/85 p-5 shadow-lg shadow-black/5 ring-1 ring-white/70 backdrop-blur ${className}`}
+      className={`glass-surface rounded-3xl bg-white/85 p-5 shadow-lg shadow-black/5 ring-1 ring-white/70 backdrop-blur ${className}`}
     >
       {title && <h2 className="font-bold text-slate-700">{title}</h2>}
       {children}

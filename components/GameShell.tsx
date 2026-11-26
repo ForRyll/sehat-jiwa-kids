@@ -1,8 +1,8 @@
-import PageShell from "./PageShell";
+import PageShell, { PageTone } from "./PageShell";
 
 type GameShellProps = {
   children: React.ReactNode;
-  tone?: "sky" | "amber" | "violet";
+  tone?: PageTone;
 };
 
 // Halaman game = PageShell dengan tombol kembali ke menu Main

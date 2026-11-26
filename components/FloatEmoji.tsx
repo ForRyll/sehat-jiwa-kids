@@ -1,13 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionSafe } from "@/lib/storage";
 
 type FloatEmojiProps = {
   emoji: string;
 };
 
 export default function FloatEmoji({ emoji }: FloatEmojiProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMotionSafe();
 
   return (
     <motion.div

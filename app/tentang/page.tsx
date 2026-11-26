@@ -2,6 +2,7 @@ import Link from "next/link";
 import GlassCard from "@/components/GlassCard";
 import Mascot from "@/components/Mascot";
 import PageShell from "@/components/PageShell";
+import ReplayOnboardingButton from "@/components/ReplayOnboardingButton";
 import Reveal from "@/components/Reveal";
 import { tentang } from "@/content/tentang";
 
@@ -166,6 +167,15 @@ export default function TentangPage() {
             </a>
             .
           </p>
+        </GlassCard>
+      </Reveal>
+
+      <Reveal className="mt-6">
+        <GlassCard title="Tutorial Awal">
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            Ingin melihat ulang perkenalan singkat bersama Awan?
+          </p>
+          <ReplayOnboardingButton />
         </GlassCard>
       </Reveal>
     </PageShell>

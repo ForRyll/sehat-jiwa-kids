@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionSafe } from "@/lib/storage";
 
 const stars = [
   { top: "6%", left: "14%", size: 14, delay: 0 },
@@ -21,7 +22,7 @@ type AuroraProps = {
 };
 
 export default function Aurora({ blobA, blobB }: AuroraProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMotionSafe();
 
   return (
     <div
