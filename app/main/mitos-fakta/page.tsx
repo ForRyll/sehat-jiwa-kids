@@ -6,13 +6,14 @@ import Link from "next/link";
 import GameShell from "@/components/GameShell";
 import Mascot from "@/components/Mascot";
 import GentleSparkles from "@/components/GentleSparkles";
-import { useMotionSafe } from "@/lib/storage";
+import { useMotionSafe, useGameStats } from "@/lib/storage";
 import { mitosFaktaItems } from "@/content/mitos-fakta";
 
 type SwipeDir = "left" | "right" | null;
 
 export default function MitosFaktaPage() {
   const reduceMotion = useMotionSafe();
+  const { recordGame } = useGameStats();
   const cards = mitosFaktaItems;
 
   const [index, setIndex] = useState(0);
@@ -38,6 +39,9 @@ export default function MitosFaktaPage() {
   );
 
   const next = () => {
+    if (index === cards.length - 1) {
+      recordGame("mitosFaktaCount", 1);
+    }
     setAnswered(null);
     setIndex((i) => i + 1);
   };

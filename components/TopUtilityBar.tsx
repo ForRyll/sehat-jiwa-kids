@@ -58,6 +58,17 @@ export default function TopUtilityBar() {
             <span>Bantuan</span>
           </Link>
         )}
+
+        {pathname !== "/pengaturan" && (
+          <Link
+            href="/pengaturan"
+            aria-label="Pengaturan dan Preferensi"
+            title="Pengaturan"
+            className="pointer-events-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white/80 text-sm font-bold shadow-sm ring-1 ring-white/80 hover:bg-white backdrop-blur transition active:scale-95"
+          >
+            <span aria-hidden>⚙️</span>
+          </Link>
+        )}
       </div>
     </div>
   );

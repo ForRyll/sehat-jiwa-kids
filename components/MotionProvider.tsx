@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { MotionConfig } from "framer-motion";
-import { useCalmMode, useDarkMode } from "@/lib/storage";
+import { useCalmMode, useDarkMode, useTextSize } from "@/lib/storage";
 
 export default function MotionProvider({
   children,
@@ -11,6 +11,7 @@ export default function MotionProvider({
 }) {
   const { calmMode } = useCalmMode();
   const { darkMode } = useDarkMode();
+  const { textSize } = useTextSize();
 
   useEffect(() => {
     document.documentElement.dataset.calmMode = calmMode ? "true" : "false";
@@ -19,6 +20,10 @@ export default function MotionProvider({
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? "dark" : "light";
   }, [darkMode]);
+
+  useEffect(() => {
+    document.documentElement.dataset.textSize = textSize;
+  }, [textSize]);
 
   return (
     <MotionConfig reducedMotion={calmMode ? "always" : "user"}>

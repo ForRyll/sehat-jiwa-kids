@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import GameShell from "@/components/GameShell";
 import Mascot from "@/components/Mascot";
 import GentleSparkles from "@/components/GentleSparkles";
-import { useMotionSafe } from "@/lib/storage";
+import { useMotionSafe, useGameStats } from "@/lib/storage";
 
 /* ---------- pola napas ---------- */
 type BreathPattern = {
@@ -49,6 +49,7 @@ type Stage = "setup" | "running" | "done";
 
 export default function NapasPage() {
   const reduceMotion = useMotionSafe();
+  const { recordGame } = useGameStats();
 
   /* ---------- state ---------- */
   const [stage, setStage] = useState<Stage>("setup");
@@ -85,6 +86,7 @@ export default function NapasPage() {
       setElapsed(now);
       if (now >= targetSeconds) {
         setStage("done");
+        recordGame("napasCount", 1);
         setSparkleKey((k) => k + 1);
         vibrate(200);
       }
@@ -92,7 +94,7 @@ export default function NapasPage() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [stage, targetSeconds, vibrate]);
+  }, [stage, targetSeconds, vibrate, recordGame]);
 
   /* ---------- phase cycling ---------- */
   useEffect(() => {
@@ -120,6 +122,7 @@ export default function NapasPage() {
 
   const stop = () => {
     setStage("done");
+    recordGame("napasCount", 1);
     vibrate(100);
   };
 

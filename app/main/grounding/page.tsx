@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import GameShell from "@/components/GameShell";
 import Mascot from "@/components/Mascot";
 import GentleSparkles from "@/components/GentleSparkles";
-import { useMotionSafe } from "@/lib/storage";
+import { useMotionSafe, useGameStats } from "@/lib/storage";
 
 /* ---------- steps ---------- */
 type GroundingStep = {
@@ -56,6 +56,7 @@ const steps: GroundingStep[] = [
 
 export default function GroundingPage() {
   const reduceMotion = useMotionSafe();
+  const { recordGame } = useGameStats();
 
   const [stepIdx, setStepIdx] = useState(0);
   const [tapped, setTapped] = useState<number[]>([]); // items tapped in current step
@@ -74,6 +75,9 @@ export default function GroundingPage() {
     // auto advance when all items tapped
     if (next.length >= currentStep.count) {
       setSparkleKey((k) => k + 1);
+      if (stepIdx + 1 >= steps.length) {
+        recordGame("groundingCount", 1);
+      }
       setTimeout(() => {
         setStepIdx((s) => s + 1);
         setTapped([]);

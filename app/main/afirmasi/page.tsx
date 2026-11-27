@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import GameShell from "@/components/GameShell";
-import { useMotionSafe } from "@/lib/storage";
+import { useMotionSafe, useFavoriteAfirmasi, useGameStats } from "@/lib/storage";
 
 const cards = [
   "Nggak apa-apa kalau hari ini cuma bisa sedikit. Sedikit tetap berarti.",
@@ -40,9 +40,15 @@ function pickNext(prev: number) {
 
 export default function AfirmasiPage() {
   const reduceMotion = useMotionSafe();
+  const { has, toggle } = useFavoriteAfirmasi();
+  const { recordGame } = useGameStats();
+
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(0);
+
+  const currentCard = cards[index];
+  const isFav = has(currentCard);
 
   const handleTap = () => {
     if (flipped) {
@@ -53,6 +59,7 @@ export default function AfirmasiPage() {
     setIndex((prev) => pickNext(prev));
     setDrawn((d) => d + 1);
     setFlipped(true);
+    recordGame("afirmasiDrawn", 1);
   };
 
   return (
@@ -166,12 +173,27 @@ export default function AfirmasiPage() {
               >
                 <span className="text-3xl">💜</span>
 
-                <p className="mt-4 text-lg font-bold text-slate-700">
-                  {cards[index]}
+                <p className="mt-4 text-base font-bold text-slate-700">
+                  {currentCard}
                 </p>
 
-                <span className="mt-6 text-xs text-slate-400">
-                  Ketuk lagi untuk menutup
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggle(currentCard);
+                  }}
+                  className={`mt-4 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition shadow-xs active:scale-95 ${
+                    isFav
+                      ? "bg-amber-100 text-amber-800 ring-1 ring-amber-300"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                >
+                  <span>{isFav ? "⭐ Tersimpan di Favorit" : "🤍 Simpan ke Favorit"}</span>
+                </button>
+
+                <span className="mt-4 text-[11px] text-slate-400">
+                  Ketuk kartu untuk menutup
                 </span>
               </div>
             </motion.div>

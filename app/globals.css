@@ -147,3 +147,12 @@ body {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
 }
+
+/* Skala Ukuran Teks */
+html[data-text-size="medium"] {
+  font-size: 106.25%;
+}
+
+html[data-text-size="large"] {
+  font-size: 112.5%;
+}

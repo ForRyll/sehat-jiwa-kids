@@ -4,109 +4,100 @@ import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import GentleSparkles from "./GentleSparkles";
-
-type Mood = {
-  emoji: string;
-  label: string;
-  msg: string;
-  href?: string;
-  cta?: string;
-};
-
-const moods: Mood[] = [
-  {
-    emoji: "😄",
-    label: "Senang",
-    msg: "Seneng dengernya! Nikmati momen ini, dan boleh banget cerita ke orang terdekat.",
-  },
-  {
-    emoji: "🙂",
-    label: "Baik",
-    msg: "Bagus, tetap pelan-pelan ya. Mau coba game santai?",
-    href: "/main",
-    cta: "Buka Main",
-  },
-  {
-    emoji: "😐",
-    label: "Biasa",
-    msg: "Hari yang biasa aja juga nggak apa-apa. Kadang cukup rehat sebentar.",
-    href: "/main/napas",
-    cta: "Latihan napas",
-  },
-  {
-    emoji: "😔",
-    label: "Sedih",
-    msg: "Makasih udah jujur sama perasaanmu. Coba tarik napas pelan dulu, kamu nggak sendirian.",
-    href: "/main/napas",
-    cta: "Latihan napas",
-  },
-  {
-    emoji: "😣",
-    label: "Berat",
-    msg: "Kedengarannya lagi berat. Pelan-pelan ya, dan kamu boleh cerita ke orang yang kamu percaya.",
-    href: "/bantuan",
-    cta: "Lihat bantuan",
-  },
-];
+import { useMoodHistory, MoodType } from "@/lib/storage";
+import { MOOD_CONFIGS } from "@/content/moods";
 
 export default function MoodStrip() {
-  const [picked, setPicked] = useState<number | null>(null);
+  const { todayEntry, saveMood } = useMoodHistory();
   const [burstKey, setBurstKey] = useState(0);
 
-  return (
-    <section className="glass-surface relative rounded-3xl bg-white/60 p-4 shadow-md backdrop-blur">
-      <GentleSparkles burstKey={burstKey} />
-      <h2 className="text-center text-sm font-bold text-slate-700">
-        Hari ini lagi ngerasa apa?
-      </h2>
+  const moodsList = Object.keys(MOOD_CONFIGS) as MoodType[];
+  const currentMood = todayEntry ? todayEntry.mood : null;
+  const activeConfig = currentMood ? MOOD_CONFIGS[currentMood] : null;
 
-      <div className="mt-3 flex gap-2">
-        {moods.map((m, i) => (
-          <motion.button
-            key={m.label}
-            onClick={() => {
-              const next = picked === i ? null : i;
-              setPicked(next);
-              if (next !== null) setBurstKey((k) => k + 1);
-            }}
-            aria-pressed={picked === i}
-            aria-label={m.label}
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.9 }}
-            animate={{ scale: picked === i ? 1.12 : 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className={`flex-1 rounded-2xl py-2 text-2xl transition-colors ${
-              picked === i
-                ? "bg-white shadow-md ring-2 ring-sky-400"
-                : "bg-white/70"
-            }`}
-          >
-            {m.emoji}
-          </motion.button>
-        ))}
+  const handlePick = (type: MoodType) => {
+    saveMood(type);
+    setBurstKey((k) => k + 1);
+  };
+
+  return (
+    <section className="glass-surface relative rounded-3xl bg-white/70 p-4 shadow-md backdrop-blur border border-white/60">
+      <GentleSparkles burstKey={burstKey} />
+
+      <div className="flex items-center justify-between px-1">
+        <h2 className="text-sm font-bold text-slate-800">
+          Hari ini lagi ngerasa apa? 🌤️
+        </h2>
+        <Link
+          href="/perasaan"
+          className="text-xs font-bold text-sky-600 hover:text-sky-700 hover:underline"
+        >
+          {todayEntry ? "Lihat Riwayat →" : "Buka Jurnal →"}
+        </Link>
       </div>
 
+      {/* Mood Selector Buttons */}
+      <div className="mt-3 grid grid-cols-6 gap-1.5">
+        {moodsList.map((type) => {
+          const cfg = MOOD_CONFIGS[type];
+          const isSelected = currentMood === type;
+
+          return (
+            <motion.button
+              key={type}
+              type="button"
+              onClick={() => handlePick(type)}
+              aria-pressed={isSelected}
+              aria-label={cfg.label}
+              whileHover={{ y: -3, scale: 1.08 }}
+              whileTap={{ scale: 0.9 }}
+              animate={{ scale: isSelected ? 1.15 : 1 }}
+              transition={{ type: "spring", stiffness: 350, damping: 18 }}
+              className={`flex aspect-square min-h-11 items-center justify-center rounded-2xl text-2xl transition-all ${
+                isSelected
+                  ? `bg-white shadow-md ring-2 ${cfg.ringColor}`
+                  : "bg-white/80 hover:bg-white"
+              }`}
+            >
+              <span className="leading-none">{cfg.emoji}</span>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Message and action button */}
       <AnimatePresence mode="wait">
-        {picked !== null && (
+        {activeConfig && (
           <motion.div
-            key={picked}
+            key={currentMood}
             initial={{ opacity: 0, y: 8, height: 0 }}
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="mt-3 text-center text-sm text-slate-600">
-              {moods[picked].msg}
-            </p>
-            {moods[picked].href && (
+            <div className="mt-3 rounded-2xl bg-white/80 p-3 text-center shadow-2xs border border-slate-100">
+              <p className="text-xs font-semibold text-slate-700">
+                {activeConfig.reassurance}
+              </p>
+            </div>
+
+            <div className="mt-2.5 flex gap-2">
               <Link
-                href={moods[picked].href}
-                className="mt-3 block rounded-full bg-linear-to-r from-sky-400 to-indigo-400 py-2.5 text-center text-sm font-bold text-white shadow-md active:scale-95"
+                href="/perasaan"
+                className="flex-1 rounded-xl bg-slate-100 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition"
               >
-                {moods[picked].cta}
+                ✏️ Tambah Catatan
               </Link>
-            )}
+              {activeConfig.recommendation.href && (
+                <Link
+                  href={activeConfig.recommendation.href}
+                  className="flex-1 rounded-xl bg-linear-to-r from-sky-400 to-indigo-500 py-2 text-center text-xs font-bold text-white shadow-xs active:scale-95 transition"
+                >
+                  {activeConfig.recommendation.cta}
+                </Link>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
