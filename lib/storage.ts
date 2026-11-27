@@ -31,6 +31,7 @@ export type GameStats = {
   afirmasiDrawn: number;
   emosiCount: number;
   skriningCount: number;
+  ceritaCount: number;
 };
 
 export type MoodType =
@@ -585,6 +586,7 @@ export function useGameStats() {
         afirmasiDrawn: p.afirmasiDrawn || 0,
         emosiCount: p.emosiCount || 0,
         skriningCount: p.skriningCount || 0,
+        ceritaCount: p.ceritaCount || 0,
       };
     } catch {
       return {
@@ -594,6 +596,7 @@ export function useGameStats() {
         afirmasiDrawn: 0,
         emosiCount: 0,
         skriningCount: 0,
+        ceritaCount: 0,
       };
     }
   }, [raw]);

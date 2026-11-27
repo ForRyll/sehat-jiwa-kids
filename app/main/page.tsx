@@ -64,6 +64,14 @@ export default function MainPage() {
           color="bg-amber-100"
           index={5}
         />
+        <MenuCard
+          href="/main/cerita"
+          title="Cerita Interaktif"
+          desc="Eksplorasi dilema kuliah & tips koping"
+          emoji="🎭"
+          color="bg-fuchsia-100"
+          index={6}
+        />
       </div>
 
       <p className="mt-6 rounded-2xl bg-white/60 p-3 text-center text-xs text-slate-600 backdrop-blur">
